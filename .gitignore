@@ -1,0 +1,5 @@
+/odoo.conf
+/.initialized
+/.installed
+__pycache__/
+.vscode/

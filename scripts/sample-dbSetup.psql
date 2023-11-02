@@ -1,0 +1,12 @@
+
+/**
+ * DB Setup: Postgres commands to setup a database for the Odoo project.
+ * 
+ * 1. Replace variables in below with desired values
+ * 2. In postgres prompt, Run: `\i "path to this file"`
+*/
+
+create role {DB_USERNAME} login;
+alter role {DB_USERNAME} password '{DB_USER_PASSWORD}';
+create database {DB_NAME};
+alter database {DB_NAME} owner to {DB_USERNAME};

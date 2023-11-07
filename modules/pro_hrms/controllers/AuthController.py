@@ -1,10 +1,17 @@
-from odoo import http
-from odoo.http import request
 import json
-from odoo.addons.pro_hrms.helpers import jwtHelper
 
-class AuthController(http.Controller):
-    @http.route(['/hrms/api/auth/login'], type = 'json', auth = 'public', methods = ['POST'])
+# Odoo modules
+
+# Custom modules
+from odoo.addons.pro_hrms.controllers.BaseController import BaseController
+from odoo.addons.pro_hrms.helpers import authHelper
+from odoo.addons.pro_hrms.helpers import sessionHelper
+
+# AuthController
+class AuthController(BaseController):
+    # loginUser
+    @BaseController.moduleRoute('auth/login', 'POST', False)
+    @authHelper.authenticatedUser
     def loginUser(self, **kw):
         validationErrors = {
             'db': 'Required',
@@ -36,8 +43,9 @@ class AuthController(http.Controller):
         [db, login, password] = kw.values()
 
         print('AuthController->loginUser()', db, login, password)
+        print('hrmsOdooTestVar:', sessionHelper.get('hrmsOdooTestVar'))
 
-        token = jwtHelper.create({
+        token = authHelper.createAccessToken({
             'db': db,
             'login': login,
         })
@@ -45,3 +53,7 @@ class AuthController(http.Controller):
         return {
             'token': token
         }
+
+    # loginUser
+
+# AuthController

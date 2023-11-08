@@ -38,8 +38,19 @@ if %installed% == True (
     pip install --user virtualenv
     cd %odooFolder%
     python -m venv env
-    env\Scripts\pip.exe install --upgrade pip
-    env\Scripts\pip.exe install -r requirements.txt
+
+    call env\Scripts\activate.bat
+
+    pip install --upgrade pip
+    pip install -r requirements.txt
+
+    cd %projectFolder%
+
+    pip install -r requirements.txt
+
+    cd %odooFolder%
+
+    call env\Scripts\deactivate.bat
 
     cd %projectFolder%
 

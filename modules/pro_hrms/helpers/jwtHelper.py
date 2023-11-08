@@ -13,6 +13,15 @@ def create(data):
 
 # decode
 def decode(token):
-    return jwt.decode(token, __PUBLIC_KEY, algorithms = ['RS256'])
+    rawData = None
+
+    try:
+        rawData = jwt.decode(token, __PUBLIC_KEY, algorithms = ['RS256'])
+    except:
+        print('Error occurred when trying to decode JWT token.')
+
+        rawData = None
+
+    return rawData
 
 # decode

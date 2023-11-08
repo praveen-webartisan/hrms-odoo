@@ -1,17 +1,18 @@
 import json
 
 # Odoo modules
+from odoo import http
+from odoo.tools import authenticate
 
 # Custom modules
 from odoo.addons.pro_hrms.controllers.BaseController import BaseController
-from odoo.addons.pro_hrms.helpers import authHelper
 from odoo.addons.pro_hrms.helpers import sessionHelper
+from odoo.addons.pro_hrms.helpers.moduleResponse import NotFoundResponse, InvalidDataResponse
 
 # AuthController
 class AuthController(BaseController):
     # loginUser
     @BaseController.moduleRoute('auth/login', 'POST', False)
-    @authHelper.authenticatedUser
     def loginUser(self, **kw):
         validationErrors = {
             'db': 'Required',
@@ -42,10 +43,17 @@ class AuthController(BaseController):
 
         [db, login, password] = kw.values()
 
-        print('AuthController->loginUser()', db, login, password)
-        print('hrmsOdooTestVar:', sessionHelper.get('hrmsOdooTestVar'))
+        if not http.db_filter([db]):
+            return NotFoundResponse(f'Database {db} not found in the Odoo instance.')
 
-        token = authHelper.createAccessToken({
+        try:
+            userId = authenticate(db, login, password)
+
+            print('authenticated userId:', userId)
+        except odoo.exceptions.AccessDenied:
+            return InvalidDataResponse(message = 'Invalid Username/Password. Please check.')
+
+        token = self.createAccessToken({
             'db': db,
             'login': login,
         })

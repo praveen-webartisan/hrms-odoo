@@ -41,6 +41,8 @@ then
 
     cd "$projectPath"
 
+    pip install -r requirements.txt
+
     echo "True" > "$projectPath/.installed"
 
     python odoo-bin -c "$projectPath/odoo.conf" -i base
